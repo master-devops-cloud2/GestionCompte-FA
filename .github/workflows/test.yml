@@ -1,4 +1,5 @@
 name: Run Tests
+
 on:
   pull_request:
     branches:
@@ -6,23 +7,34 @@ on:
   push:
     branches:
       - main
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup SpringBoot
-        uses: actions/setup-node@v3
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v3
         with:
-          node-version: '16'
-      - name: Install dependencies
-        uses: npm install
+          java-version: '11'  # Changez cette version en fonction de votre version de JDK
+
+      - name: Install Maven
+        uses: actions/setup-java@v3
+        with:
+          maven-version: '3.8.1'  # Optionnel, Maven est souvent déjà installé avec JDK, mais cela peut garantir une version spécifique.
+
+      - name: Build with Maven
+        run: mvn clean install  # Cette commande compile le projet et lance les tests
+
       - name: Run Tests
-        uses: npm test
+        run: mvn test  # Exécute uniquement les tests
+
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: ./test-results
+          path: ./target/test-outputs  # Assurez-vous que le chemin des résultats de test est correct (c'est souvent dans target)
