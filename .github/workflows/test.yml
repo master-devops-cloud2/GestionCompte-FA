@@ -6,7 +6,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  Run Test:
+  Test:
 
     runs-on: ubuntu-latest
 
